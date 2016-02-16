@@ -350,7 +350,7 @@
                 "authorizationRules": []
             },
             "dependsOn": [
-                "[resourceId('Microsoft.NotificationHubs/namespaces', [parameters('notiNamespace')])]"
+                "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
             ]
         },
         {
