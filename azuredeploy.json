@@ -397,7 +397,7 @@
             "edition": "Standard",
             "collation": "SQL_Latin1_General_CP1_CI_AS",
             "maxSizeBytes": "268435456000",
-            "requestedServiceObjectiveName": "f1173c43-91bd-4aaa-973c-54e79e15235b"
+            "requestedServiceObjectiveName": "S0"
           }
         },
         {
