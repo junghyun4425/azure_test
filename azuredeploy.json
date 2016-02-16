@@ -59,7 +59,16 @@
       "defaultValue": "myNameSpace"
     }
   },
-  "variables": {},
+  "variables": {
+    "url": ".azurewebsites.net",
+    "urlScm": ".scm.azurewebsites.net",
+    "mobileName": "[parameters('sitesName_mobile')]",
+    "webName": "[parameters('sitesName_web')]",
+    "mobileSiteName": "[concat(variables('mobileName'),variables('url'))]",
+    "mobileScmSiteName": "[concat(variables('mobileName'),variables('urlScm'))]",
+    "webSiteName": "[concat(variables('webName'),variables('url'))]",
+    "webScmSiteName": "[concat(variables('webName'),variables('urlScm'))]"
+  },
   "resources": [
     {
       "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
@@ -360,7 +369,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
           ]
-        },
+        }
       ]
     },
     {
@@ -445,21 +454,21 @@
       "properties": {
         "name": "[parameters('sitesName_mobile')]",
         "hostNames": [
-          "jh-mobileapp.azurewebsites.net"
+          "[variables('mobileSiteName')]"
         ],
         "enabledHostNames": [
-          "jh-mobileapp.azurewebsites.net",
-          "jh-mobileapp.scm.azurewebsites.net"
+          "[variables('mobileSiteName')]",
+          "[variables('mobileScmSiteName')]"
         ],
         "hostNameSslStates": [
           {
-            "name": "jh-mobileapp.azurewebsites.net",
+            "name": "[variables('mobileSiteName')]",
             "sslState": 0,
             "thumbprint": null,
             "ipBasedSslState": 0
           },
           {
-            "name": "jh-mobileapp.scm.azurewebsites.net",
+            "name": "[variables('mobileScmSiteName')]",
             "sslState": 0,
             "thumbprint": null,
             "ipBasedSslState": 0
@@ -480,21 +489,21 @@
       "properties": {
         "name": "[parameters('sitesName_web')]",
         "hostNames": [
-          "jh-webapp.azurewebsites.net"
+          "[variables('webSiteName')]"
         ],
         "enabledHostNames": [
-          "jh-webapp.azurewebsites.net",
-          "jh-webapp.scm.azurewebsites.net"
+          "[variables('webSiteName')]",
+          "[variables('webScmSiteName')]"
         ],
         "hostNameSslStates": [
           {
-            "name": "jh-webapp.azurewebsites.net",
+            "name": "[variables('webSiteName')]",
             "sslState": 0,
             "thumbprint": null,
             "ipBasedSslState": 0
           },
           {
-            "name": "jh-webapp.scm.azurewebsites.net",
+            "name": "[variables('webScmSiteName')]",
             "sslState": 0,
             "thumbprint": null,
             "ipBasedSslState": 0
