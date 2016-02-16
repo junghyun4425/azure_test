@@ -339,19 +339,6 @@
             }
         },
         {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns/notificationHubs/jhnoti",
-            "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
-            "name": "[parameters('notificationHubsName')]",
-            "apiVersion": "2014-09-01",
-            "location": "Japan West",
-            "properties": {
-                "authorizationRules": []
-            },
-            "dependsOn": [
-                 "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
-            ]
-        },
-        {
             "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns",
             "type": "Microsoft.NotificationHubs/namespaces",
             "name": "[parameters('notiNamespace')]",
@@ -359,7 +346,22 @@
             "location": "Japan West",
             "properties": {
                 "namespaceType": "NotificationHub"
-            }
+            },
+            "resources": [
+                {
+                    "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns/notificationHubs/jhnoti",
+                    "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
+                    "name": "[parameters('notificationHubsName')]",
+                    "apiVersion": "2014-09-01",
+                    "location": "Japan West",
+                    "properties": {
+                        "authorizationRules": []
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
+                    ]
+                }
+            ]
         },
         {
             "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Sql/servers/jhsqldbserver",
