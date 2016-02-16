@@ -50,21 +50,6 @@
     "variables": {},
     "resources": [
         {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Sql/servers/jhsqldbserver/firewallRules/AllowAllWindowsAzureIps",
-            "type": "Microsoft.Sql/servers/firewallRules",
-            "kind": "v12.0",
-            "name": "AllowAllWindowsAzureIps",
-            "apiVersion": "2014-04-01-preview",
-            "location": "Japan West",
-            "properties": {
-                "startIpAddress": "0.0.0.0",
-                "endIpAddress": "0.0.0.0"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
-            ]
-        },
-        {
             "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
             "type": "Microsoft.Cache/Redis",
             "name": "[parameters('redisName')]",
