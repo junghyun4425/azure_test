@@ -1,510 +1,510 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "redisName": {
-            "type": "string",
-            "defaultValue": "jhredis"
-        },
-        "notificationHubsName": {
-            "type": "string",
-            "defaultValue": "jhnoti"
-        },
-        "serverName": {
-            "type": "string",
-            "defaultValue": "jhsqldbserver"
-        },
-        "databaseName": {
-            "type": "string",
-            "defaultValue": "jh-cloudbread-db"
-        },
-        "storageAccountsName": {
-            "type": "string",
-            "defaultValue": "jhaccount"
-        },
-        "planName": {
-            "type": "string",
-            "defaultValue": "jh-app-plan"
-        },
-        "sitesName_mobile": {
-            "type": "string",
-            "defaultValue": "jh-mobileApp-site"
-        },
-        "appName_mobile": {
-            "type": "string",
-            "defaultValue": "jh-mobileApp"
-        },
-        "sitesName_web": {
-            "type": "string",
-            "defaultValue": "jh-webApp-site"
-        },
-        "appName_web": {
-            "type": "string",
-            "defaultValue": "jh-webApp"
-        },
-        "administratorLogin": {
-            "type": "string",
-            "metadata": {
-                "description": "The account name to use for the database server administrator."
-            }
-        },
-        "administratorLoginPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The password to use for the database server administrator."
-            }
-        },
-        "notiNamespace": {
-            "type": "string",
-            "defaultValue": "myNameSpace"
-        }
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "redisName": {
+      "type": "string",
+      "defaultValue": "jhredis"
     },
-    "variables": {},
-    "resources": [
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
-            "type": "Microsoft.Cache/Redis",
-            "name": "[parameters('redisName')]",
-            "apiVersion": "2015-08-01",
-            "location": "Japan West",
-            "properties": {
-                "sku": {
-                    "name": "Standard",
-                    "family": "C",
-                    "capacity": 1
-                },
-                "enableNonSslPort": false,
-                "redisConfiguration": {
-                    "maxclients": "1000",
-                    "maxmemory-reserved": "50",
-                    "maxmemory-delta": "50"
-                }
-            }
+    "notificationHubsName": {
+      "type": "string",
+      "defaultValue": "jhnoti"
+    },
+    "serverName": {
+      "type": "string",
+      "defaultValue": "jhsqldbserver"
+    },
+    "databaseName": {
+      "type": "string",
+      "defaultValue": "jh-cloudbread-db"
+    },
+    "storageAccountsName": {
+      "type": "string",
+      "defaultValue": "jhaccount"
+    },
+    "planName": {
+      "type": "string",
+      "defaultValue": "jh-app-plan"
+    },
+    "sitesName_mobile": {
+      "type": "string",
+      "defaultValue": "jh-mobileApp-site"
+    },
+    "appName_mobile": {
+      "type": "string",
+      "defaultValue": "jh-mobileApp"
+    },
+    "sitesName_web": {
+      "type": "string",
+      "defaultValue": "jh-webApp-site"
+    },
+    "appName_web": {
+      "type": "string",
+      "defaultValue": "jh-webApp"
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "The account name to use for the database server administrator."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password to use for the database server administrator."
+      }
+    },
+    "notiNamespace": {
+      "type": "string",
+      "defaultValue": "myNameSpace"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
+      "type": "Microsoft.Cache/Redis",
+      "name": "[parameters('redisName')]",
+      "apiVersion": "2015-08-01",
+      "location": "Japan West",
+      "properties": {
+        "sku": {
+          "name": "Standard",
+          "family": "C",
+          "capacity": 1
         },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/CPUHigh jh-app-plan",
-            "type": "microsoft.insights/alertrules",
-            "name": "CPUHigh jh-app-plan",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "CPUHigh jh-app-plan",
-                "description": "The average CPU is high across all the instances of jh-app-plan",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
-                        "metricName": "CpuPercentage"
-                    },
-                    "threshold": 90,
-                    "windowSize": "PT15M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ForbiddenRequests jh-mobileApp",
-            "type": "microsoft.insights/alertrules",
-            "name": "ForbiddenRequests jh-mobileApp",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "ForbiddenRequests jh-mobileApp",
-                "description": "jh-mobileApp has some requests that are forbidden, status code 403.",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]",
-                        "metricName": "Http403"
-                    },
-                    "windowSize": "PT5M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ForbiddenRequests jh-webApp",
-            "type": "microsoft.insights/alertrules",
-            "name": "ForbiddenRequests jh-webApp",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "ForbiddenRequests jh-webApp",
-                "description": "jh-webApp has some requests that are forbidden, status code 403.",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]",
-                        "metricName": "Http403"
-                    },
-                    "windowSize": "PT5M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/LongHttpQueue jh-app-plan",
-            "type": "microsoft.insights/alertrules",
-            "name": "LongHttpQueue jh-app-plan",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "LongHttpQueue jh-app-plan",
-                "description": "The HTTP queue for the instances of jh-app-plan has a large number of pending requests.",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
-                        "metricName": "HttpQueueLength"
-                    },
-                    "threshold": 100,
-                    "windowSize": "PT5M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ServerErrors jh-mobileApp",
-            "type": "microsoft.insights/alertrules",
-            "name": "ServerErrors jh-mobileApp",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "ServerErrors jh-mobileApp",
-                "description": "jh-mobileApp has some server errors, status code 5xx.",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]",
-                        "metricName": "Http5xx"
-                    },
-                    "windowSize": "PT5M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ServerErrors jh-webApp",
-            "type": "microsoft.insights/alertrules",
-            "name": "ServerErrors jh-webApp",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "ServerErrors jh-webApp",
-                "description": "jh-webApp has some server errors, status code 5xx.",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]",
-                        "metricName": "Http5xx"
-                    },
-                    "windowSize": "PT5M"
-                },
-                "action": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                    "sendToServiceOwners": true,
-                    "customEmails": []
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/autoscalesettings/jh-app-plan-jh-rg-cloudbread",
-            "type": "microsoft.insights/autoscalesettings",
-            "name": "jh-app-plan-jh-rg-cloudbread",
-            "apiVersion": "2015-04-01",
-            "location": "Japan West",
-            "properties": {
-                "profiles": [
-                    {
-                        "name": "Default",
-                        "capacity": {
-                            "minimum": "1",
-                            "maximum": "1",
-                            "default": "1"
-                        },
-                        "rules": [
-                            {
-                                "metricTrigger": {
-                                    "metricName": "CpuPercentage",
-                                    "metricNamespace": "",
-                                    "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
-                                    "timeGrain": "PT1M",
-                                    "statistic": "Average",
-                                    "timeWindow": "PT10M",
-                                    "timeAggregation": "Average",
-                                    "operator": "GreaterThan",
-                                    "threshold": 80
-                                },
-                                "scaleAction": {
-                                    "direction": "Increase",
-                                    "type": "ChangeCount",
-                                    "value": "1",
-                                    "cooldown": "PT10M"
-                                }
-                            },
-                            {
-                                "metricTrigger": {
-                                    "metricName": "CpuPercentage",
-                                    "metricNamespace": "",
-                                    "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
-                                    "timeGrain": "PT1M",
-                                    "statistic": "Average",
-                                    "timeWindow": "PT1H",
-                                    "timeAggregation": "Average",
-                                    "operator": "LessThan",
-                                    "threshold": 60
-                                },
-                                "scaleAction": {
-                                    "direction": "Decrease",
-                                    "type": "ChangeCount",
-                                    "value": "1",
-                                    "cooldown": "PT1H"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "enabled": true,
-                "name": "jh-app-plan-jh-rg-cloudbread",
-                "targetResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-mobileApp",
-            "type": "microsoft.insights/components",
-            "kind": "web",
-            "name": "[parameters('appName_mobile')]",
-            "apiVersion": "2015-05-01",
-            "location": "Central US",
-            "properties": {
-                "ApplicationId": "[parameters('sitesName_mobile')]"
-            }
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-webApp",
-            "type": "microsoft.insights/components",
-            "kind": "web",
-            "name": "[parameters('appName_web')]",
-            "apiVersion": "2015-05-01",
-            "location": "Central US",
-            "properties": {
-                "ApplicationId": "[parameters('sitesName_web')]"
-            }
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns",
-            "type": "Microsoft.NotificationHubs/namespaces",
-            "name": "[parameters('notiNamespace')]",
-            "apiVersion": "2014-09-01",
-            "location": "Japan West",
-            "properties": {
-                "namespaceType": "NotificationHub"
-            },
-            "resources": [
-                {
-                    "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns/notificationHubs/jhnoti",
-                    "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
-                    "name": "[parameters('notificationHubsName')]",
-                    "apiVersion": "2014-09-01",
-                    "location": "Japan West",
-                    "properties": {
-                        "authorizationRules": []
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
-                    ]
-                }
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Sql/servers/jhsqldbserver",
-            "type": "Microsoft.Sql/servers",
-            "kind": "v12.0",
-            "name": "[parameters('serverName')]",
-            "apiVersion": "2014-04-01-preview",
-            "location": "Japan West",
-            "properties": {
-                "administratorLogin": "[parameters('administratorLogin')]",
-                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
-                "version": "12.0"
-            },
-            "resources": [
-                {
-                    "name": "[parameters('databaseName')]",
-                    "type": "databases",
-                    "location": "Japan West",
-                    "apiVersion": "2014-04-01-preview",
-                    "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
-                    ],
-                    "properties": {
-                        "edition": "Standard",
-                        "collation": "SQL_Latin1_General_CP1_CI_AS",
-                        "maxSizeBytes": "268435456000",
-                        "requestedServiceObjectiveName": "f1173c43-91bd-4aaa-973c-54e79e15235b"
-                    }
-                },
-                {
-                    "apiVersion": "2014-04-01-preview",
-                    "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
-                    ],
-                    "location": "Japan West",
-                    "name": "AllowAllWindowsAzureIps",
-                    "properties": {
-                        "endIpAddress": "0.0.0.0",
-                        "startIpAddress": "0.0.0.0"
-                    },
-                    "type": "firewallrules"
-                }
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Storage/storageAccounts/jhaccount",
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[parameters('storageAccountsName')]",
-            "apiVersion": "2015-06-15",
-            "location": "japanwest",
-            "properties": {
-                "accountType": "Standard_RAGRS"
-            }
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/serverFarms/jh-app-plan",
-            "type": "Microsoft.Web/serverFarms",
-            "sku": {
-                "name": "S1",
-                "tier": "Standard",
-                "size": "S1",
-                "family": "S",
-                "capacity": 1
-            },
-            "kind": "",
-            "name": "[parameters('planName')]",
-            "apiVersion": "2015-08-01",
-            "location": "Japan West",
-            "properties": {
-                "name": "[parameters('planName')]",
-                "numberOfWorkers": 1
-            }
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/sites/jh-mobileApp",
-            "type": "Microsoft.Web/sites",
-            "kind": "mobileapp",
-            "name": "[parameters('sitesName_mobile')]",
-            "apiVersion": "2015-08-01-preview",
-            "location": "Japan West",
-            "properties": {
-                "name": "[parameters('sitesName_mobile')]",
-                "hostNames": [
-                    "jh-mobileapp.azurewebsites.net"
-                ],
-                "enabledHostNames": [
-                    "jh-mobileapp.azurewebsites.net",
-                    "jh-mobileapp.scm.azurewebsites.net"
-                ],
-                "hostNameSslStates": [
-                    {
-                        "name": "jh-mobileapp.azurewebsites.net",
-                        "sslState": 0,
-                        "thumbprint": null,
-                        "ipBasedSslState": 0
-                    },
-                    {
-                        "name": "jh-mobileapp.scm.azurewebsites.net",
-                        "sslState": 0,
-                        "thumbprint": null,
-                        "ipBasedSslState": 0
-                    }
-                ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            ]
-        },
-        {
-            "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/sites/jh-webApp",
-            "type": "Microsoft.Web/sites",
-            "name": "[parameters('sitesName_web')]",
-            "apiVersion": "2015-08-01-preview",
-            "location": "Japan West",
-            "properties": {
-                "name": "[parameters('sitesName_web')]",
-                "hostNames": [
-                    "jh-webapp.azurewebsites.net"
-                ],
-                "enabledHostNames": [
-                    "jh-webapp.azurewebsites.net",
-                    "jh-webapp.scm.azurewebsites.net"
-                ],
-                "hostNameSslStates": [
-                    {
-                        "name": "jh-webapp.azurewebsites.net",
-                        "sslState": 0,
-                        "thumbprint": null,
-                        "ipBasedSslState": 0
-                    },
-                    {
-                        "name": "jh-webapp.scm.azurewebsites.net",
-                        "sslState": 0,
-                        "thumbprint": null,
-                        "ipBasedSslState": 0
-                    }
-                ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
-            ]
+        "enableNonSslPort": false,
+        "redisConfiguration": {
+          "maxclients": "1000",
+          "maxmemory-reserved": "50",
+          "maxmemory-delta": "50"
         }
-    ]
+      }
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/CPUHigh jh-app-plan",
+      "type": "microsoft.insights/alertrules",
+      "name": "CPUHigh jh-app-plan",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "CPUHigh jh-app-plan",
+        "description": "The average CPU is high across all the instances of jh-app-plan",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
+            "metricName": "CpuPercentage"
+          },
+          "threshold": 90,
+          "windowSize": "PT15M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ForbiddenRequests jh-mobileApp",
+      "type": "microsoft.insights/alertrules",
+      "name": "ForbiddenRequests jh-mobileApp",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "ForbiddenRequests jh-mobileApp",
+        "description": "jh-mobileApp has some requests that are forbidden, status code 403.",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]",
+            "metricName": "Http403"
+          },
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ForbiddenRequests jh-webApp",
+      "type": "microsoft.insights/alertrules",
+      "name": "ForbiddenRequests jh-webApp",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "ForbiddenRequests jh-webApp",
+        "description": "jh-webApp has some requests that are forbidden, status code 403.",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]",
+            "metricName": "Http403"
+          },
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/LongHttpQueue jh-app-plan",
+      "type": "microsoft.insights/alertrules",
+      "name": "LongHttpQueue jh-app-plan",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "LongHttpQueue jh-app-plan",
+        "description": "The HTTP queue for the instances of jh-app-plan has a large number of pending requests.",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
+            "metricName": "HttpQueueLength"
+          },
+          "threshold": 100,
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ServerErrors jh-mobileApp",
+      "type": "microsoft.insights/alertrules",
+      "name": "ServerErrors jh-mobileApp",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "ServerErrors jh-mobileApp",
+        "description": "jh-mobileApp has some server errors, status code 5xx.",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]",
+            "metricName": "Http5xx"
+          },
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sitesName_mobile'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/alertrules/ServerErrors jh-webApp",
+      "type": "microsoft.insights/alertrules",
+      "name": "ServerErrors jh-webApp",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "ServerErrors jh-webApp",
+        "description": "jh-webApp has some server errors, status code 5xx.",
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]",
+            "metricName": "Http5xx"
+          },
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": []
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sitesName_web'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/autoscalesettings/jh-app-plan-jh-rg-cloudbread",
+      "type": "microsoft.insights/autoscalesettings",
+      "name": "jh-app-plan-jh-rg-cloudbread",
+      "apiVersion": "2015-04-01",
+      "location": "Japan West",
+      "properties": {
+        "profiles": [
+          {
+            "name": "Default",
+            "capacity": {
+              "minimum": "1",
+              "maximum": "1",
+              "default": "1"
+            },
+            "rules": [
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricNamespace": "",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT10M",
+                  "timeAggregation": "Average",
+                  "operator": "GreaterThan",
+                  "threshold": 80
+                },
+                "scaleAction": {
+                  "direction": "Increase",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT10M"
+                }
+              },
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricNamespace": "",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT1H",
+                  "timeAggregation": "Average",
+                  "operator": "LessThan",
+                  "threshold": 60
+                },
+                "scaleAction": {
+                  "direction": "Decrease",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT1H"
+                }
+              }
+            ]
+          }
+        ],
+        "enabled": true,
+        "name": "jh-app-plan-jh-rg-cloudbread",
+        "targetResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-mobileApp",
+      "type": "microsoft.insights/components",
+      "kind": "web",
+      "name": "[parameters('appName_mobile')]",
+      "apiVersion": "2015-05-01",
+      "location": "Central US",
+      "properties": {
+        "ApplicationId": "[parameters('sitesName_mobile')]"
+      }
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-webApp",
+      "type": "microsoft.insights/components",
+      "kind": "web",
+      "name": "[parameters('appName_web')]",
+      "apiVersion": "2015-05-01",
+      "location": "Central US",
+      "properties": {
+        "ApplicationId": "[parameters('sitesName_web')]"
+      }
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns",
+      "type": "Microsoft.NotificationHubs/namespaces",
+      "name": "[parameters('notiNamespace')]",
+      "apiVersion": "2014-09-01",
+      "location": "Japan West",
+      "properties": {
+        "namespaceType": "NotificationHub"
+      },
+      "resources": [
+        {
+          "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.NotificationHubs/namespaces/jh-noti-ns/notificationHubs/jhnoti",
+          "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
+          "name": "[parameters('notificationHubsName')]",
+          "apiVersion": "2014-09-01",
+          "location": "Japan West",
+          "properties": {
+            "authorizationRules": []
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('notiNamespace'))]"
+          ]
+        }
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Sql/servers/jhsqldbserver",
+      "type": "Microsoft.Sql/servers",
+      "kind": "v12.0",
+      "name": "[parameters('serverName')]",
+      "apiVersion": "2014-04-01-preview",
+      "location": "Japan West",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "[parameters('databaseName')]",
+          "type": "databases",
+          "location": "Japan West",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+          ],
+          "properties": {
+            "edition": "Standard",
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "maxSizeBytes": "268435456000",
+            "requestedServiceObjectiveName": "f1173c43-91bd-4aaa-973c-54e79e15235b"
+          }
+        },
+        {
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+          ],
+          "location": "Japan West",
+          "name": "AllowAllWindowsAzureIps",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          },
+          "type": "firewallrules"
+        }
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Storage/storageAccounts/jhaccount",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountsName')]",
+      "apiVersion": "2015-06-15",
+      "location": "japanwest",
+      "properties": {
+        "accountType": "Standard_RAGRS"
+      }
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/serverFarms/jh-app-plan",
+      "type": "Microsoft.Web/serverFarms",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
+        "capacity": 1
+      },
+      "kind": "",
+      "name": "[parameters('planName')]",
+      "apiVersion": "2015-08-01",
+      "location": "Japan West",
+      "properties": {
+        "name": "[parameters('planName')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/sites/jh-mobileApp",
+      "type": "Microsoft.Web/sites",
+      "kind": "mobileapp",
+      "name": "[parameters('sitesName_mobile')]",
+      "apiVersion": "2015-08-01-preview",
+      "location": "Japan West",
+      "properties": {
+        "name": "[parameters('sitesName_mobile')]",
+        "hostNames": [
+          "jh-mobileapp.azurewebsites.net"
+        ],
+        "enabledHostNames": [
+          "jh-mobileapp.azurewebsites.net",
+          "jh-mobileapp.scm.azurewebsites.net"
+        ],
+        "hostNameSslStates": [
+          {
+            "name": "jh-mobileapp.azurewebsites.net",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "jh-mobileapp.scm.azurewebsites.net",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      ]
+    },
+    {
+      "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Web/sites/jh-webApp",
+      "type": "Microsoft.Web/sites",
+      "name": "[parameters('sitesName_web')]",
+      "apiVersion": "2015-08-01-preview",
+      "location": "Japan West",
+      "properties": {
+        "name": "[parameters('sitesName_web')]",
+        "hostNames": [
+          "jh-webapp.azurewebsites.net"
+        ],
+        "enabledHostNames": [
+          "jh-webapp.azurewebsites.net",
+          "jh-webapp.scm.azurewebsites.net"
+        ],
+        "hostNameSslStates": [
+          {
+            "name": "jh-webapp.azurewebsites.net",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "jh-webapp.scm.azurewebsites.net",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms', parameters('planName'))]"
+      ]
+    }
+  ]
 }
