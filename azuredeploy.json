@@ -28,9 +28,17 @@
         },
         "sitesName_mobile": {
             "type": "string",
+            "defaultValue": "jh-mobileApp-site"
+        },
+        "appName_mobile": {
+            "type": "string",
             "defaultValue": "jh-mobileApp"
         },
         "sitesName_web": {
+            "type": "string",
+            "defaultValue": "jh-webApp-site"
+        },
+        "appName_web": {
             "type": "string",
             "defaultValue": "jh-webApp"
         },
@@ -312,7 +320,7 @@
             "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-mobileApp",
             "type": "microsoft.insights/components",
             "kind": "web",
-            "name": "jh-mobileapp",
+            "name": "[parameters('appName_mobile')]",
             "apiVersion": "2015-05-01",
             "location": "Central US",
             "properties": {
@@ -323,7 +331,7 @@
             "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/microsoft.insights/components/jh-webApp",
             "type": "microsoft.insights/components",
             "kind": "web",
-            "name": "jh-webapp",
+            "name": "[parameters('appName_web')]",
             "apiVersion": "2015-05-01",
             "location": "Central US",
             "properties": {
